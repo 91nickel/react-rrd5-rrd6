@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom'
 // Librares
 import * as Yup from "yup";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useFormik, FormikProvider } from "formik";
 // Store
@@ -15,6 +16,7 @@ import SpinLoading from "../components/SpinLoader";
 import StyledNavLink from "../components/StyledNavLink";
 //Icons
 import { UserIcon, KeyIcon, MailIcon } from "@heroicons/react/outline";
+
 
 const signUpSchema = Yup.object({
     username: Yup.string()
@@ -36,7 +38,7 @@ const SignUpPage = () => {
     const [loading, setLoading] = useState(false);
     const [successful, setSuccessful] = useState(false);
     const { message } = useSelector((state) => state.message);
-    const history = useHistory();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -51,7 +53,7 @@ const SignUpPage = () => {
             .unwrap()
             .then(() => {
                 setSuccessful(true);
-                history.push("/");
+                navigate('/', {replace: true})
             })
             .catch(() => {
                 setSuccessful(false);

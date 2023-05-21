@@ -1,19 +1,20 @@
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { logOut } from "../store/authSlice";
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { logOut } from '../store/authSlice'
+
 const useLogout = () => {
-    const history = useHistory();
-    const dispatch = useDispatch();
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
     const handleLoguot = () =>
         dispatch(logOut())
             .unwrap()
             .then(() => {
-                history.push("/");
+                navigate('/')
             })
             .catch(() => {
-                window.location.reload();
-            });
-    return handleLoguot;
-};
+                window.location.reload()
+            })
+    return handleLoguot
+}
 
-export default useLogout;
+export default useLogout

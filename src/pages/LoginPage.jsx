@@ -1,62 +1,64 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 // Librares
-import * as Yup from "yup";
-import { useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { useFormik, FormikProvider } from "formik";
+import * as Yup from 'yup'
+import { useSelector, useDispatch } from 'react-redux'
+import { useFormik, FormikProvider } from 'formik'
 // Store
-import { login } from "../store/authSlice";
-import { clearMessage } from "../store/messageSlice";
+import { login } from '../store/authSlice'
+import { clearMessage } from '../store/messageSlice'
 // Components
-import SpinLoading from "../components/SpinLoader";
-import StyledNavLink from "../components/StyledNavLink";
-import Button from "../components/Button";
-import TextField from "../components/inputs/TextInput";
-import Card from "../components/Card";
+import SpinLoading from '../components/SpinLoader'
+import StyledNavLink from '../components/StyledNavLink'
+import Button from '../components/Button'
+import TextField from '../components/inputs/TextInput'
+import Card from '../components/Card'
 // Icons
-import { UserIcon, KeyIcon } from "@heroicons/react/outline";
+import { UserIcon, KeyIcon } from '@heroicons/react/outline'
 
 const validationSchema = Yup.object().shape({
-    username: Yup.string().required("This field is required!"),
-    password: Yup.string().required("This field is required!"),
-});
+    username: Yup.string().required('This field is required!'),
+    password: Yup.string().required('This field is required!'),
+})
 
 const initialValues = {
-    username: "",
-    password: "",
-};
+    username: '',
+    password: '',
+}
 
 const LoginPage = () => {
-    const [loading, setLoading] = useState(false);
-    const { message } = useSelector((state) => state.message);
-    const history = useHistory();
-    const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false)
+    const {message} = useSelector((state) => state.message)
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const location = useLocation()
 
     useEffect(() => {
-        dispatch(clearMessage());
-    }, [dispatch]);
+        dispatch(clearMessage())
+    }, [dispatch])
 
     const handleLogin = (formValue) => {
-        const { username, password } = formValue;
-        setLoading(true);
-        const redirect = history.location.state
-            ? history.location.state.referrer.pathname
-            : null;
-        dispatch(login({ username, password }))
+        const {username, password} = formValue
+        setLoading(true)
+        console.log(location)
+        const redirect = location.state
+            ? location.state.referer.pathname
+            : '/posts'
+        dispatch(login({username, password}))
             .unwrap()
             .then(() => {
-                history.push(redirect || "/");
+                navigate(redirect, {replace: true})
             })
             .catch(() => {
-                setLoading(false);
-            });
-    };
+                setLoading(false)
+            })
+    }
 
     const formik = useFormik({
         initialValues,
         validationSchema,
         onSubmit: handleLogin,
-    });
+    })
 
     return (
         <>
@@ -64,9 +66,9 @@ const LoginPage = () => {
                 <Card.Title>Login</Card.Title>
 
                 <div className='text-sm text-slate-600'>
-                    or{" "}
+                    or{' '}
                     <StyledNavLink to='/auth/signUp' styleType='underline'>
-                        {" "}
+                        {' '}
                         start your 14-day free trial
                     </StyledNavLink>
                 </div>
@@ -88,7 +90,7 @@ const LoginPage = () => {
                         />
                         <div className='pt-2'>
                             <Button disabled={loading}>
-                                {loading && <SpinLoading />} Log In
+                                {loading && <SpinLoading/>} Log In
                             </Button>
                         </div>
                     </form>
@@ -103,7 +105,7 @@ const LoginPage = () => {
                 </FormikProvider>
             </div>
         </>
-    );
-};
+    )
+}
 
-export default LoginPage;
+export default LoginPage
